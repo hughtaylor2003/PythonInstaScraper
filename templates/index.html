@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instagram Classifier</title>
+  <style>
+    .box {
+      width: 100px;
+      height: 100px;
+      background-color: lightblue;
+      margin: 10px;
+      display: inline-block;
+      position: relative;
+    }
+    .remove-btn {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      cursor: pointer;
+      color: red;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+    <h1>Instagram Classifier</h1>
+    <form method="POST" action="/upload" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".csv" required>
+        <input type="hidden" id="dataArray" name="dataArray">
+        <button type="submit">Get data</button>
+    </form>
+<br>
+<br>
+  <div>
+    <label for="textInput">Add Classifier</label>
+    <input type="text" id="textInput">
+    <br>
+
+    <button onclick="addBox()">Add</button>
+  </div>
+  <div id="boxContainer"></div>
+
+  <script>
+    // JavaScript code to manage boxes
+    const boxes = [];
+
+  function addBox() {
+    const boxContainer = document.getElementById('boxContainer');
+    const textInput = document.getElementById('textInput');
+    const text = textInput.value.trim();
+
+    if (text === '') {
+      alert('Please enter text before submitting.');
+      return;
+    }
+
+    const newBox = document.createElement('div');
+    const boxId = boxes.length + 1;
+
+    newBox.className = 'box';
+    newBox.innerHTML = `
+      <span class="remove-btn" onclick="removeBox(${boxId})">X</span>
+      <div class="box-content">${text}</div>
+    `;
+    newBox.setAttribute('data-box-id', boxId);
+    boxContainer.appendChild(newBox);
+
+    boxes.push(text);
+
+    document.getElementById('dataArray').value = boxes;
+
+    // Clear the text input after submission
+    textInput.value = '';
+  }
+
+  function removeBox(boxId) {
+    const boxContainer = document.getElementById('boxContainer');
+    const boxToRemove = document.querySelector(`[data-box-id="${boxId}"]`);
+
+    if (boxToRemove) {
+      const indexToRemove = boxes.findIndex((box) => boxId.toString() === box);
+      boxes.splice(indexToRemove, 1);
+
+      boxContainer.removeChild(boxToRemove);
+      document.getElementById('dataArray').value = boxes;
+    }
+  }
+
+  </script>
+
+</body>
+</html>
+
+
+
